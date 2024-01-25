@@ -1,0 +1,45 @@
+version: '3.9'
+services:
+  # Frontend service
+  frontend:
+    image: frontend
+    ports:
+      - "4173:4173"  # Replace with the port your frontend listens on
+    depends_on:
+      - backend
+    networks:
+      - app-net
+
+  # Backend service
+  backend:
+    image: backend
+    ports:
+      - "3000:3000"  # Replace with the port your backend listens on
+    networks:
+      - app-net
+
+        #  # MongoDB service
+        #  mongo:
+        #    image: mongo
+        #    ports:
+        #      - "27017:27017"  # Expose MongoDB port
+        #    volumes:
+        #      - mongo-data:/data/db  # Mount a volume for MongoDB data
+        #    networks:
+        #      - app-net
+
+  # Nginx service
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"  # Expose Nginx on port 80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf  # Mount the Nginx configuration
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-net
+
+networks:
+  app-net:
